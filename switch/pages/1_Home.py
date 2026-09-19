@@ -10,6 +10,22 @@ inject_base_css()
 user = local_auth.current_user()
 student_id = user["user_id"] if user else "demo-student"
 
+# DEBUG
+from tree_store import get_store
+store = get_store()
+
+if user:
+    st.write(f"DEBUG: User ID: {user['user_id']}")
+    st.write(f"DEBUG: Stored semester path: {user.get('semester')}")
+    
+    semester_node = store.find_node_by_path_label(user.get('semester', ''))
+    st.write(f"DEBUG: Semester node found: {semester_node is not None}")
+    if semester_node:
+        children = store.children_of(semester_node['id'])
+        st.write(f"DEBUG: Course units count: {len(children)}")
+        for child in children:
+            st.write(f"  - {child['name']}")
+
 # ---- 1. Header & persistent search ----
 header_cols = st.columns([5, 1])
 with header_cols[0]:
